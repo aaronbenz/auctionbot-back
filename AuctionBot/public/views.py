@@ -7,6 +7,7 @@ from AuctionBot.extensions import login_manager
 from AuctionBot.public.forms import LoginForm
 from AuctionBot.user.forms import RegisterForm
 from AuctionBot.user.models import User
+from AuctionBot.items.models import Items
 from AuctionBot.utils import flash_errors
 
 blueprint = Blueprint('public', __name__, static_folder='../static')
