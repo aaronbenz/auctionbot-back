@@ -3,7 +3,7 @@
 import datetime as dt
 
 from AuctionBot.database import Column, Model, SurrogatePK, db, reference_col, relationship
-
+from AuctionBot.bids.models import Bids
 class Items(SurrogatePK, Model):
     """A role for a user."""
 
@@ -20,12 +20,14 @@ class Items(SurrogatePK, Model):
 
 
     def to_dict(self):
+        bid = Bids.query.filter(Bids.item_id==self.id).order_by(Bids.timestamp.desc()).first()
         return {"id": self.id,
                 "name": self.name,
                 "image_url": self.image_url,
                 "expiration_time": self.expiration_time,
                 "min_bid": self.min_bid,
-                "min_increment_bid": self.min_increment_bid}
+                "min_increment_bid": self.min_increment_bid,
+                "current_bid": bid}
 
     def __repr__(self):
         """Represent instance as a unique string."""
