@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Helper utilities and decorators."""
-from flask import flash
+from flask import flash, Response
 
 
 def flash_errors(form, category='warning'):
@@ -9,7 +9,8 @@ def flash_errors(form, category='warning'):
         for error in errors:
             flash('{0} - {1}'.format(getattr(form, field).label.text, error), category)
 
-from flask import json
+# from flask import json
+import simplejson as json
 from datetime import datetime
 
 def jsonify(dictionary):
@@ -29,3 +30,10 @@ def jsonify(dictionary):
 
     out = json.dumps(dictionary, default=default, use_decimal=True, ensure_ascii=False)
     return out
+
+def responsify(dictionary, **kwargs):
+    # we can't use the normal jsonify method because it doesn't like doubles
+    mimetype = kwargs.get("memetype", "application/json")
+    status = kwargs.get("status", 200)
+    # content = json.dumps(dictionary, default=lambda o: o.__dict__, use_decimal=True, ensure_ascii=False)
+    return Response(response=jsonify(dictionary), mimetype=mimetype, status=status)
