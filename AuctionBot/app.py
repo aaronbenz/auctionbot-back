@@ -4,7 +4,7 @@ from flask import Flask, render_template
 
 from AuctionBot import public, user, items, api, bids
 from AuctionBot.assets import assets
-from AuctionBot.extensions import bcrypt, cache, csrf_protect, db, debug_toolbar, login_manager, migrate
+from AuctionBot.extensions import bcrypt, cache, db, debug_toolbar, login_manager, migrate #csrf_protect
 from AuctionBot.settings import ProdConfig
 
 
@@ -27,7 +27,7 @@ def register_extensions(app):
     bcrypt.init_app(app)
     cache.init_app(app)
     db.init_app(app)
-    csrf_protect.init_app(app)
+    # csrf_protect.init_app(app)
     login_manager.init_app(app)
     debug_toolbar.init_app(app)
     migrate.init_app(app, db)
@@ -38,6 +38,7 @@ def register_blueprints(app):
     """Register Flask blueprints."""
     app.register_blueprint(public.views.blueprint)
     app.register_blueprint(user.views.blueprint)
+    app.register_blueprint(api.routes.blueprint)
     return None
 
 

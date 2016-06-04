@@ -18,6 +18,15 @@ class Items(SurrogatePK, Model):
         """Create instance."""
         db.Model.__init__(self, **kwargs)
 
+
+    def to_dict(self):
+        return {"id": self.id,
+                "name": self.name,
+                "image_url": self.image_url,
+                "expiration_time": self.expiration_time,
+                "min_bid": self.min_bid,
+                "min_increment_bid": self.min_increment_bid}
+
     def __repr__(self):
         """Represent instance as a unique string."""
         return '<Items({name})>'.format(name=self.name)

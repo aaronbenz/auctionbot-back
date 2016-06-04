@@ -18,6 +18,14 @@ class Bids(SurrogatePK, Model):
         """Create instance."""
         db.Model.__init__(self, name=name, **kwargs)
 
+    def to_dict(self):
+
+        return {"id": self.id,
+                "price": self.price,
+                "timestamp": self.timestamp,
+                "user_id": self.user_id,
+                "item_id": self.item_id}
+
     def __repr__(self):
         """Represent instance as a unique string."""
         return '<Bids({name})>'.format(name=self.id)

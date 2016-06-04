@@ -49,6 +49,13 @@ class User(UserMixin, SurrogatePK, Model):
         else:
             self.password = None
 
+    def to_dict(self):
+        return {"id": self.id,
+                "username": self.username,
+                "email": self.email,
+                "name": self.full_name,
+                "image_url": self.image_url}
+
     def set_password(self, password):
         """Set password."""
         self.password = bcrypt.generate_password_hash(password)
