@@ -29,8 +29,8 @@ class User(UserMixin, SurrogatePK, Model):
     """A user of the app."""
 
     __tablename__ = 'users'
-    username = Column(db.String(80), unique=True, nullable=False)
-    email = Column(db.String(80), unique=True, nullable=False)
+    username = Column(db.String(80), unique=True)
+    email = Column(db.String(80), unique=True)
     #: The hashed password
     password = Column(db.String(128), nullable=True)
     created_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
@@ -38,10 +38,10 @@ class User(UserMixin, SurrogatePK, Model):
     last_name = Column(db.String(30), nullable=True)
     active = Column(db.Boolean(), default=False)
     is_admin = Column(db.Boolean(), default=False)
-    fb_id = Column(db.String(50))
+    fb_id = Column(db.String(50), unique=True)
     image_url = Column(db.String(100))
 
-    def __init__(self, username, email, password=None, **kwargs):
+    def __init__(self, username=None, email=None, password=None, **kwargs):
         """Create instance."""
         db.Model.__init__(self, username=username, email=email, **kwargs)
         if password:
