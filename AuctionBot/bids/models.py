@@ -6,13 +6,13 @@ class Bids(SurrogatePK, Model):
     """A role for a user."""
 
     __tablename__ = 'bids'
-    price = Column(db.DECIMAL(12), unique=True, nullable=False)
-    timestamp = Column(db.DECIMAL(8), unique=True, nullable=False)
+    price = Column(db.DECIMAL(12),nullable=False)
+    timestamp = Column(db.DECIMAL(8), nullable=False)
     user_id = reference_col('users', nullable=True)
     user = relationship('User', backref='bids')
 
     item_id = reference_col('items', nullable=True)
-    item = relationship('Item', backref='bids')
+    item = relationship('Items', backref='bids')
 
     def __init__(self, name, **kwargs):
         """Create instance."""
@@ -20,4 +20,4 @@ class Bids(SurrogatePK, Model):
 
     def __repr__(self):
         """Represent instance as a unique string."""
-        return '<Role({name})>'.format(name=self.name)
+        return '<Bids({name})>'.format(name=self.id)

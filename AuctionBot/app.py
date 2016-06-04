@@ -2,7 +2,7 @@
 """The app module, containing the app factory function."""
 from flask import Flask, render_template
 
-from AuctionBot import public, user
+from AuctionBot import public, user, items, api, bids
 from AuctionBot.assets import assets
 from AuctionBot.extensions import bcrypt, cache, csrf_protect, db, debug_toolbar, login_manager, migrate
 from AuctionBot.settings import ProdConfig
