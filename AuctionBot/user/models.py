@@ -50,9 +50,7 @@ class User(UserMixin, SurrogatePK, Model):
             self.password = None
 
     def to_dict(self):
-        return {"id": self.id,
-                "username": self.username,
-                "email": self.email,
+        return {"fb_id": self.fb_id,
                 "first_name": self.first_name,
                 "image_url": self.image_url}
 

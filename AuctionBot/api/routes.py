@@ -18,7 +18,8 @@ DELETE = "DELETE"
 success_json = responsify({"success": True})
 
 def error_json(error_code, msg="An Error Occurred"):
-    return responsify({"code": error_code,
+    return responsify({"success": False,
+                       "code": error_code,
                        "msg": msg})
 @blueprint.route('/')
 def test():
@@ -28,6 +29,12 @@ def test():
 def get_items():
     """List members."""
     items = Items.query.filter(Items.expiration_time >= int(time())).limit(10).all()
+    return responsify({"items": items})\
+
+@blueprint.route('/items/<id>/')
+def get_item_by_id(id):
+    """List members."""
+    items = [Items.get_by_id(id)]
     return responsify({"items": items})
 
 @blueprint.route('/items/', methods=[POST])
@@ -57,11 +64,11 @@ def new_bid():
 
     if recent_bid is not None:
         if recent_bid.user.fb_id == fb_id:
-            return error_json(405, "User is already top bidder")
+            return error_json(405, "You are already top bidder! But I like your enthusiasm ;)")
         if recent_bid.price > price:
-            return error_json(405, "Bid is less than the current bid...aka... bring out the check book")
+            return error_json(333, "Bid is less than the current bid... aka... bring out the check book")
         if recent_bid.price + recent_bid.item.min_increment_bid > price:
-            return error_json(405, "Bid is not high enough... more money please :)")
+            return error_json(333, "Bid is not high enough... more money please :)")
 
     usr = User.query.filter(User.fb_id==fb_id).first()
 

@@ -19,11 +19,10 @@ class Bids(SurrogatePK, Model):
         db.Model.__init__(self, **kwargs)
 
     def to_dict(self):
-
         return {"id": self.id,
                 "price": self.price,
                 "timestamp": self.timestamp,
-                "user_id": self.user_id,
+                "user": self.user,
                 "item_id": self.item_id}
 
     @staticmethod
