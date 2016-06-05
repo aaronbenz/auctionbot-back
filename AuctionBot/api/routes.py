@@ -7,6 +7,8 @@ from AuctionBot.items.models import Items
 from AuctionBot.bids.models import Bids
 from AuctionBot.user.models import User
 from AuctionBot.utils import responsify
+from AuctionBot.notifications.models import Notifications
+from AuctionBot import communications
 from time import time
 blueprint = Blueprint('routes', __name__, url_prefix='/api')
 from AuctionBot.extensions import db
@@ -48,7 +50,7 @@ def new_user():
         User.create(**request.json)
         return success_json
     except pymysql.IntegrityError:
-        return error_json(405, "User already exists")
+        return error_json(405, communications.USER_ALREADY_EXISTS)
     except Exception, e:
         return error_json(101)
 
@@ -64,11 +66,11 @@ def new_bid():
 
     if recent_bid is not None:
         if recent_bid.user.fb_id == fb_id:
-            return error_json(405, "You are already top bidder! But I like your enthusiasm ;)")
+            return error_json(405, communications.USER_IS_TOP_BIDDER)
         if recent_bid.price > price:
-            return error_json(333, "Bid is less than the current bid... aka... bring out the check book")
+            return error_json(333, communications.BID_IS_LESS_THAN_CURRENT_MAX_BID)
         if recent_bid.price + recent_bid.item.min_increment_bid > price:
-            return error_json(333, "Bid is not high enough... more money please :)")
+            return error_json(333, communications.BID_IS_LESS_THAN_CURRENT_MAX_BID)
 
     usr = User.query.filter(User.fb_id==fb_id).first()
 
@@ -76,7 +78,7 @@ def new_bid():
         abort(401)
 
     Bids.create(user_id=usr.id, item_id=item_id, price=price)
-
+    Notifications.notifiy_recent_loser(item_id=item_id, not_user_id=usr.id).send_post()
     return success_json
 
 

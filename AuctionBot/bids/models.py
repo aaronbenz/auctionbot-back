@@ -4,7 +4,6 @@ from AuctionBot.database import Column, Model, SurrogatePK, db, reference_col, r
 from time import time
 class Bids(SurrogatePK, Model):
     """A role for a user."""
-
     __tablename__ = 'bids'
     price = Column(db.DECIMAL(12),nullable=False)
     timestamp = Column(db.DECIMAL(12), nullable=False, default=int(time()))
