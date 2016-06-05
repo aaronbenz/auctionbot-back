@@ -23,6 +23,7 @@ class ProdConfig(Config):
     ENV = 'prod'
     DEBUG = False
     SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root@localhost:3306/dev.db/'  # TODO: Change me
+    BOT_WEB_URI = 'https://auctionbot.localtunnel.me/notifications'  # TODO: Change me
     DEBUG_TB_ENABLED = False  # Disable Debug toolbar
 
 
@@ -35,6 +36,7 @@ class DevConfig(Config):
     # Put the db file in project root
     # DB_PATH = os.path.join(Config.PROJECT_ROOT, DB_NAME)
     SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root@localhost:3306/dev.db'
+    BOT_WEB_URI = 'https://auctionbot.localtunnel.me/notifications'  # TODO: Change me
     DEBUG_TB_ENABLED = True
     ASSETS_DEBUG = True  # Don't bundle/minify static assets
     CACHE_TYPE = 'simple'  # Can be "memcached", "redis", etc.
@@ -46,5 +48,6 @@ class TestConfig(Config):
     TESTING = True
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = 'sqlite://'
+    BOT_WEB_URI = 'https://auctionbot.localtunnel.me/notifications'  # TODO: Change me
     BCRYPT_LOG_ROUNDS = 4  # For faster tests; needs at least 4 to avoid "ValueError: Invalid rounds"
     WTF_CSRF_ENABLED = False  # Allows form testing

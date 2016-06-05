@@ -2,6 +2,7 @@ from AuctionBot.items.models import Items
 from AuctionBot.bids.models import Bids
 from AuctionBot import communications
 from AuctionBot import utils
+import flask
 import requests
 class Notifications(object):
     def __init__(self, users, msg=communications.BASE_NOTIFICATION, items=None):
@@ -22,7 +23,8 @@ class Notifications(object):
 
     def send_post(self):
         #probably should check response of this
-        requests.post("https://auctionbot.localtunnel.me/notifications", data=utils.jsonify(self), headers={'content-type': "application/json"})
+        response = requests.post(flask.current_app.config.get("BOT_WEB_URI"), data=utils.jsonify(self), headers={'content-type': "application/json"})
+        print "Response from Web Bot: {0} : {1}".format(response.status_code, response.text)
 
     @staticmethod
     def notify_all_bidders_of_item(item_id, msg=communications.BASE_NOTIFICATION_TO_ALL_BIDDERS_OF_ITEM):
