@@ -3,7 +3,7 @@
 import pymysql
 from flask import Blueprint, render_template, request, abort
 # from flask_login import login_required
-from AuctionBot.items.models import Items
+from AuctionBot.items.models import Items, CLOSED, ACTIVE, HIDDEN
 from AuctionBot.bids.models import Bids
 from AuctionBot.user.models import User
 from AuctionBot.utils import responsify
@@ -39,7 +39,7 @@ def test():
 @blueprint.route('/items/')
 def get_items():
     """List members."""
-    items = Items.query.filter(Items.expiration_time >= int(time())).limit(10).all()
+    items = Items.query.filter(Items.expiration_time >= int(time())).filter(Items.status == ACTIVE).limit(10).all()
     return responsify({"items": items})
 
 @blueprint.route('/items/<id>/')
@@ -81,6 +81,8 @@ def new_bid():
             return error_json(333, communications.BID_IS_LESS_THAN_CURRENT_MAX_BID)
         if recent_bid.price + recent_bid.item.min_increment_bid > price:
             return error_json(333, communications.BID_IS_LESS_THAN_CURRENT_MAX_BID)
+        if recent_bid.item.status in [CLOSED, HIDDEN] or recent_bid.item.expiration_time < int(time()):
+            return error_json(333, communications.ITEM_IS_CLOSED_OR_EXPIRED)
 
     #get current user making bid
     usr = User.query.filter(User.fb_id==fb_id).first()
