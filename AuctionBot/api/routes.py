@@ -17,12 +17,21 @@ PUT = "PUT"
 POST = "POST"
 DELETE = "DELETE"
 
-success_json = responsify({"success": True})
 
-def error_json(error_code, msg="An Error Occurred"):
+
+def success_json(msg="All Good", data=None):
+    return responsify({"success": True,
+                       "data": data,
+                       "msg": msg})
+
+def error_json(error_code, msg="An Error Occurred", data=None):
     return responsify({"success": False,
                        "code": error_code,
-                       "msg": msg})
+                       "msg": msg,
+                       "data": data})
+
+#todo Veryify Schema of Incoming Requests
+#todo Add Security for Calls, currently all open
 @blueprint.route('/')
 def test():
     return "Team AuctionBot Succa"
@@ -31,7 +40,7 @@ def test():
 def get_items():
     """List members."""
     items = Items.query.filter(Items.expiration_time >= int(time())).limit(10).all()
-    return responsify({"items": items})\
+    return responsify({"items": items})
 
 @blueprint.route('/items/<id>/')
 def get_item_by_id(id):
@@ -42,13 +51,13 @@ def get_item_by_id(id):
 @blueprint.route('/items/', methods=[POST])
 def new_items():
     item = Items.create(**request.json)
-    return responsify({"id": item.id})
+    return success_json(data=item)
 
 @blueprint.route('/users/', methods=[POST])
 def new_user():
     try:
         User.create(**request.json)
-        return success_json
+        return success_json()
     except pymysql.IntegrityError:
         return error_json(405, communications.USER_ALREADY_EXISTS)
     except Exception, e:
@@ -64,6 +73,7 @@ def new_bid():
     recent_bid = Bids.current_item_bid(item_id)
     assert isinstance(recent_bid, Bids) or recent_bid is None
 
+    #check current bid to make sure its valid
     if recent_bid is not None:
         if recent_bid.user.fb_id == fb_id:
             return error_json(405, communications.USER_IS_TOP_BIDDER)
@@ -72,14 +82,19 @@ def new_bid():
         if recent_bid.price + recent_bid.item.min_increment_bid > price:
             return error_json(333, communications.BID_IS_LESS_THAN_CURRENT_MAX_BID)
 
+    #get current user making bid
     usr = User.query.filter(User.fb_id==fb_id).first()
 
     if usr is None:
         abort(401)
 
+    #Create Bid
     Bids.create(user_id=usr.id, item_id=item_id, price=price)
+
+    #Notify the recent "loser"
     Notifications.notifiy_recent_loser(item_id=item_id, not_user_id=usr.id).send_post()
-    return success_json
+
+    return success_json()
 
 
 
