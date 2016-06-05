@@ -48,6 +48,18 @@ def get_item_by_id(id):
     items = [Items.get_by_id(id)]
     return responsify({"items": items})
 
+@blueprint.route('/items/<id>/', methods=[PUT])
+def update_item_by_id(id):
+    """List members."""
+    item = Items.get_by_id(id)
+    item.update(**request.json)
+
+    if request.json.get("status") == 2:
+        Notifications.notify_winner(item.id).send_post()
+
+    return responsify({"items": item})
+
+
 @blueprint.route('/items/', methods=[POST])
 def new_items():
     item = Items.create(**request.json)

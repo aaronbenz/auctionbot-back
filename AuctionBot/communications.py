@@ -1,6 +1,8 @@
 USER_JUST_GOT_OUTBID = "You just got outbid... don't take this lightly... Punish the other person with the size of your pocket book"
 USER_IS_TOP_BIDDER = "You are already top bidder! But I like your enthusiasm ;)"
 BID_IS_LESS_THAN_CURRENT_MAX_BID = "Bid is less than the current bid... aka... bring out the check book"
+ITEM_IS_CLOSED_OR_EXPIRED = "Sorry, this item is no longer available..."
 BASE_NOTIFICATION = "Hello there sailor"
 BASE_NOTIFICATION_TO_ALL_BIDDERS_OF_ITEM = "Something is happennnnnnnnnning"
 USER_ALREADY_EXISTS = "User already exists"
+WINNER_OF_AUCTION_ITEM = "You WON!!! You're the best!... now hand over the cash... please :)"

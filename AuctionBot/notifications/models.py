@@ -5,10 +5,11 @@ from AuctionBot import utils
 import flask
 import requests
 class Notifications(object):
-    def __init__(self, users, msg=communications.BASE_NOTIFICATION, items=None):
+    def __init__(self, users, msg=communications.BASE_NOTIFICATION, items=None, code=None):
         self.users = users
         self.msg = msg
         self.items = items
+        self.code = code
 
     def to_dict(self):
         if not isinstance(self.users, list):
@@ -19,7 +20,8 @@ class Notifications(object):
 
         return {"users": self.users,
                 "msg": self.msg,
-                "items": self.items}
+                "items": self.items,
+                "code": self.code}
 
     def send_post(self):
         #probably should check response of this
@@ -45,3 +47,15 @@ class Notifications(object):
         return Notifications(users=last_bid.user,
                              items=last_bid.item,
                              msg=msg)
+
+    @staticmethod
+    def notify_winner(item_id, msg=communications.WINNER_OF_AUCTION_ITEM, code=340):
+        winning_bid = Bids.current_item_bid(item_id=item_id)
+        out = None
+
+        if winning_bid:
+            out = Notifications(users=winning_bid.user,
+                                items=winning_bid.item,
+                                msg=msg,
+                                code=code)
+        return out
