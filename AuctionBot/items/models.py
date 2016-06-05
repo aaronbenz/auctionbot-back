@@ -20,9 +20,9 @@ class Items(SurrogatePK, Model):
 
 
     def to_dict(self):
-        bid = Bids.query.filter(Bids.item_id==self.id).order_by(Bids.timestamp.desc()).first()
+        bid = Bids.current_item_bid(self.id)
         return {"id": self.id,
-                "name": self.name,
+                "title": self.name,
                 "image_url": self.image_url,
                 "expiration_time": self.expiration_time,
                 "min_bid": self.min_bid,

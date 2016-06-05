@@ -39,7 +39,7 @@ class User(UserMixin, SurrogatePK, Model):
     active = Column(db.Boolean(), default=False)
     is_admin = Column(db.Boolean(), default=False)
     fb_id = Column(db.String(50), unique=True)
-    image_url = Column(db.String(100))
+    image_url = Column(db.String(200))
 
     def __init__(self, username=None, email=None, password=None, **kwargs):
         """Create instance."""
@@ -53,7 +53,7 @@ class User(UserMixin, SurrogatePK, Model):
         return {"id": self.id,
                 "username": self.username,
                 "email": self.email,
-                "name": self.full_name,
+                "first_name": self.first_name,
                 "image_url": self.image_url}
 
     def set_password(self, password):
