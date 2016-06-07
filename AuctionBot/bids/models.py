@@ -14,6 +14,7 @@ class Bids(SurrogatePK, Model):
     item = relationship('Items', backref='bids')
 
     def __init__(self, **kwargs):
+        kwargs["timestamp"] = int(time())
         """Create instance."""
         db.Model.__init__(self, **kwargs)
 

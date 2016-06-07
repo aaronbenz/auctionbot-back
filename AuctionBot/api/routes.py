@@ -106,7 +106,9 @@ def new_bid():
     Bids.create(user_id=usr.id, item_id=item_id, price=price)
 
     #Notify the recent "loser"
-    Notifications.notifiy_recent_loser(item_id=item_id, not_user_id=usr.id).send_post()
+    notify = Notifications.notifiy_recent_loser(item_id=item_id, not_user_id=usr.id)
+    if notify is not None:
+        notify.send_post()
 
     return success_json()
 
